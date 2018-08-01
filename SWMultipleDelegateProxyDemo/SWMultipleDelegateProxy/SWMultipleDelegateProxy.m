@@ -94,9 +94,14 @@
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if([super respondsToSelector:aSelector]) return YES;
     for (id obj in self.weakDelegates.allObjects) {
-        if(obj == self && [super respondsToSelector:aSelector]) return YES;
-        if(obj != self && [obj respondsToSelector:aSelector]){
-            return YES;
+//        if(obj == self && [super respondsToSelector:aSelector]) return YES;
+//        if(obj != self && [obj respondsToSelector:aSelector]){
+//            return YES;
+//        }
+        if(obj == self || [obj isKindOfClass:NSClassFromString(@"RACDelegateProxy")]){
+            if([super respondsToSelector:aSelector]) return YES;
+        }else{
+            if([obj respondsToSelector:aSelector]) return YES;
         }
     }
     return NO;
