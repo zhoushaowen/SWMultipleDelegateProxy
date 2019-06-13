@@ -12,10 +12,9 @@
 @interface SWMultipleDelegateProxy : NSObject
 
 /**
- each delegate in the allDelegate array must be strong referenced.
- it will automatically remove duplicate object,if your set two or more same object.
- even if the object in allDelegate is a array or set or dictionary,it also can work.
- your should invoke this method before set delegate.
+ each delegate in the allDelegate array must be strong referenced;
+ if all delegate implement the same method,the last one's return value will work;
+ your should invoke this method before set delegate;
  */
 - (void)setAllDelegate:(NSArray *_Nullable)allDelegate;
 

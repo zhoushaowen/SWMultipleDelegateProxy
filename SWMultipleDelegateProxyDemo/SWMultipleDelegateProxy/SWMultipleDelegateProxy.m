@@ -11,7 +11,8 @@
 
 @interface SWMultipleDelegateProxy ()
 
-@property (nonatomic,strong) NSHashTable *weakDelegates;
+//@property (nonatomic,strong) NSHashTable *weakDelegates;
+@property (nonatomic,strong) NSPointerArray *weakDelegates;
 
 @end
 
@@ -23,11 +24,15 @@
 }
 
 - (void)setAllDelegate:(NSArray *)allDelegate {
-    [self.weakDelegates removeAllObjects];
+    //    [self.weakDelegates removeAllObjects];
+    for (int i=0; self.weakDelegates.count; i++) {
+        [self.weakDelegates removePointerAtIndex:i];
+    }
     allDelegate = [allDelegate copy];
     allDelegate = [self unpackDelegateWithArray:allDelegate];
     [allDelegate enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.weakDelegates addObject:obj];
+        //        [self.weakDelegates addObject:obj];
+        [self.weakDelegates addPointer:(__bridge void * _Nullable)(obj)];
     }];
 }
 
@@ -53,7 +58,7 @@
             [mutableArray addObject:obj];
         }
     }];
-
+    
     return [mutableArray copy];
 }
 
@@ -61,9 +66,16 @@
     return self.weakDelegates.allObjects;
 }
 
-- (NSHashTable *)weakDelegates {
+//- (NSHashTable *)weakDelegates {
+//    if(!_weakDelegates){
+//        _weakDelegates = [NSHashTable weakObjectsHashTable];
+//    }
+//    return _weakDelegates;
+//}
+
+- (NSPointerArray *)weakDelegates {
     if(!_weakDelegates){
-        _weakDelegates = [NSHashTable weakObjectsHashTable];
+        _weakDelegates = [NSPointerArray weakObjectsPointerArray];
     }
     return _weakDelegates;
 }
@@ -94,11 +106,11 @@
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if([super respondsToSelector:aSelector]) return YES;
     for (id obj in self.weakDelegates.allObjects) {
-//        if(obj == self && [super respondsToSelector:aSelector]) return YES;
-//        if(obj != self && [obj respondsToSelector:aSelector]){
-//            return YES;
-//        }
-        if(obj == self || [obj isKindOfClass:NSClassFromString(@"RACDelegateProxy")]){
+        //        if(obj == self && [super respondsToSelector:aSelector]) return YES;
+        //        if(obj != self && [obj respondsToSelector:aSelector]){
+        //            return YES;
+        //        }
+        if(obj == self){
             if([super respondsToSelector:aSelector]) return YES;
         }else{
             if([obj respondsToSelector:aSelector]) return YES;
