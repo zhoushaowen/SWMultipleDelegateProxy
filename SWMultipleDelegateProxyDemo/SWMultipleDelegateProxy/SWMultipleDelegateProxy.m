@@ -36,6 +36,10 @@
     }];
 }
 
+- (NSArray *)allDelegate {
+    return self.weakDelegates.allObjects;
+}
+
 //unpack the delegate in array or set or dictionary
 - (NSArray *)unpackDelegateWithArray:(NSArray *)array {
     NSMutableArray *mutableArray = [NSMutableArray array];

@@ -18,4 +18,6 @@
  */
 - (void)setAllDelegate:(NSArray *_Nullable)allDelegate;
 
+- (NSArray *_Nullable)allDelegate;
+
 @end
