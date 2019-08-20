@@ -25,8 +25,8 @@
 
 - (void)setAllDelegate:(NSArray *)allDelegate {
     //    [self.weakDelegates removeAllObjects];
-    for (int i=0; self.weakDelegates.count; i++) {
-        [self.weakDelegates removePointerAtIndex:i];
+    while (self.weakDelegates.count > 0) {
+        [self.weakDelegates removePointerAtIndex:0];
     }
     allDelegate = [allDelegate copy];
     allDelegate = [self unpackDelegateWithArray:allDelegate];
